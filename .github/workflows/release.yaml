@@ -1,0 +1,20 @@
+---
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    uses: Muhammad-Irfan324/platform-workflows/.github/workflows/terraform-release.yaml@v1
+    with:
+      workflows-ref: "v1"
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AUTOMATION_PAT: ${{ secrets.AUTOMATION_PAT }}

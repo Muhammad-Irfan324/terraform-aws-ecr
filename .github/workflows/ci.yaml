@@ -1,0 +1,44 @@
+---
+######################################################################
+# Module CI
+######################################################################
+#
+# Both checks a pull request must pass, in one file because they share
+# a trigger. Checkov is a SEPARATE job, not part of Module CI: running
+# it inside as well would mean two scans per pull request under two
+# configurations, free to disagree on the same commit.
+#
+# Every input below is optional except the secret — the defaults come
+# from platform-workflows. They are written out so the caller says
+# what it relies on rather than inheriting silently.
+######################################################################
+
+name: Module CI
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: module-ci-${{ github.repository }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  module_ci:
+    name: "Module CI"
+    uses: Muhammad-Irfan324/platform-workflows/.github/workflows/terraform-module-ci.yaml@v1
+    with:
+      working-directory: "."
+      require-tests: true
+      workflows-ref: "v1"
+    secrets:
+      AUTOMATION_PAT: ${{ secrets.AUTOMATION_PAT }}
+
+  checkov:
+    name: "Checkov Terraform"
+    uses: Muhammad-Irfan324/platform-workflows/.github/workflows/checkov-terraform.yaml@v1
+    with:
+      enforcement: blocking
