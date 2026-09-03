@@ -91,15 +91,15 @@ Prefer having the build pipeline push a real image where that is possible.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.4 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.62.0 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
@@ -109,7 +109,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_ecr_lifecycle_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_lifecycle_policy) | resource |
 | [aws_ecr_repository.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository) | resource |
 | [aws_ecr_repository_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository_policy) | resource |
@@ -122,7 +122,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_repository_name"></a> [repository\_name](#input\_repository\_name) | Name of the ECR repository (e.g. 'my-team/my-service') | `string` | n/a | yes |
 | <a name="input_cross_account_pull_ids"></a> [cross\_account\_pull\_ids](#input\_cross\_account\_pull\_ids) | AWS account IDs granted pull access to this repository | `list(string)` | `[]` | no |
 | <a name="input_force_delete"></a> [force\_delete](#input\_force\_delete) | Whether the repository can be deleted when it still contains images | `bool` | `false` | no |
@@ -140,7 +140,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_kms_key_arn"></a> [kms\_key\_arn](#output\_kms\_key\_arn) | ARN of the KMS key encrypting the repository |
 | <a name="output_placeholder_image_uri"></a> [placeholder\_image\_uri](#output\_placeholder\_image\_uri) | URI of the seeded placeholder image, or null when seeding is disabled |
 | <a name="output_repository_arn"></a> [repository\_arn](#output\_repository\_arn) | ARN of the ECR repository |
