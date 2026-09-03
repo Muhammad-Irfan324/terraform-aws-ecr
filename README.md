@@ -88,6 +88,64 @@ Caveats:
 Prefer having the build pipeline push a real image where that is possible.
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.4 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
+| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_ecr_lifecycle_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_lifecycle_policy) | resource |
+| [aws_ecr_repository.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository) | resource |
+| [aws_ecr_repository_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository_policy) | resource |
+| [terraform_data.seed_placeholder](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
+| [aws_iam_policy_document.repository](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_ssm_parameter.kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_repository_name"></a> [repository\_name](#input\_repository\_name) | Name of the ECR repository (e.g. 'my-team/my-service') | `string` | n/a | yes |
+| <a name="input_cross_account_pull_ids"></a> [cross\_account\_pull\_ids](#input\_cross\_account\_pull\_ids) | AWS account IDs granted pull access to this repository | `list(string)` | `[]` | no |
+| <a name="input_force_delete"></a> [force\_delete](#input\_force\_delete) | Whether the repository can be deleted when it still contains images | `bool` | `false` | no |
+| <a name="input_image_tag_mutability"></a> [image\_tag\_mutability](#input\_image\_tag\_mutability) | Tag mutability setting for the repository. IMMUTABLE prevents tag overwrites. | `string` | `"IMMUTABLE"` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | ARN of the KMS key used to encrypt the repository. When null, the key ARN is<br/>read from the SSM parameter at kms\_key\_ssm\_path instead.<br/><br/>Note: consumers pulling from this repository cross-account need decrypt<br/>permission on this key. Grant that in the key policy where the key is defined. | `string` | `null` | no |
+| <a name="input_kms_key_ssm_path"></a> [kms\_key\_ssm\_path](#input\_kms\_key\_ssm\_path) | SSM parameter path holding the ECR KMS key ARN. Only read when kms\_key\_arn is null. | `string` | `"/ecr/kms_key"` | no |
+| <a name="input_placeholder_architecture"></a> [placeholder\_architecture](#input\_placeholder\_architecture) | Architecture of the seeded placeholder image. Must match the consuming Lambda's architecture. | `string` | `"arm64"` | no |
+| <a name="input_push_principal_arns"></a> [push\_principal\_arns](#input\_push\_principal\_arns) | IAM principal ARNs granted push access (e.g. a CI/CD role or user that builds images) | `list(string)` | `[]` | no |
+| <a name="input_scan_on_push"></a> [scan\_on\_push](#input\_scan\_on\_push) | Whether images are scanned for vulnerabilities on push | `bool` | `true` | no |
+| <a name="input_seed_placeholder_image"></a> [seed\_placeholder\_image](#input\_seed\_placeholder\_image) | Push a placeholder image on first creation so a consumer (e.g. a container<br/>Lambda) can be created before the real image exists.<br/><br/>Requires docker and the aws CLI on the machine running terraform apply, and<br/>is generally only needed to bootstrap a service before its build pipeline<br/>exists. Prefer having the pipeline push a real image instead. | `bool` | `false` | no |
+| <a name="input_tagged_image_count"></a> [tagged\_image\_count](#input\_tagged\_image\_count) | Number of tagged images to keep. Retained by count rather than age so a<br/>rarely-deployed service always keeps a rollback target. | `number` | `20` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the repository, merged with whatever the provider applies by default | `map(string)` | `{}` | no |
+| <a name="input_untagged_image_retention_days"></a> [untagged\_image\_retention\_days](#input\_untagged\_image\_retention\_days) | Days before an untagged image is expired. Untagged images are build noise; this is cost policy, not a security control. | `number` | `30` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_kms_key_arn"></a> [kms\_key\_arn](#output\_kms\_key\_arn) | ARN of the KMS key encrypting the repository |
+| <a name="output_placeholder_image_uri"></a> [placeholder\_image\_uri](#output\_placeholder\_image\_uri) | URI of the seeded placeholder image, or null when seeding is disabled |
+| <a name="output_repository_arn"></a> [repository\_arn](#output\_repository\_arn) | ARN of the ECR repository |
+| <a name="output_repository_name"></a> [repository\_name](#output\_repository\_name) | Name of the ECR repository |
+| <a name="output_repository_url"></a> [repository\_url](#output\_repository\_url) | URL of the ECR repository (<account\_id>.dkr.ecr.<region>.amazonaws.com/<name>) |
 <!-- END_TF_DOCS -->
 
 ## License
