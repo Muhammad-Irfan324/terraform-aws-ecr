@@ -16,5 +16,5 @@ jobs:
     with:
       workflows-ref: "v1"
     secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TOKEN: ${{ secrets.AUTOMATION_PAT }}
       AUTOMATION_PAT: ${{ secrets.AUTOMATION_PAT }}
