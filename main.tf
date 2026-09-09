@@ -187,3 +187,11 @@ resource "terraform_data" "seed_placeholder" {
     EOT
   }
 }
+
+# Deliberate formatting break to test required status checks.
+# Remove this block after the test.
+locals {
+  test_broken_formatting    = "one"
+  another_one   = "two"
+      indented_wrong = "three"
+}
